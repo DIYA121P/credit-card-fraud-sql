@@ -1,3 +1,20 @@
+CREATION QUERIES:
+
+CUSTOMERS:
+--CREATE TABLE customers ( customer_id SERIAL PRIMARY KEY, first_name VARCHAR(50), last_name VARCHAR(50), email VARCHAR(100), phone VARCHAR(20), city VARCHAR(50), state VARCHAR(50), created_date DATE DEFAULT CURRENT_DATE );
+CREDIT CARD:
+--CREATE TABLE credit_cards ( card_id SERIAL PRIMARY KEY, customer_id INT REFERENCES customers(customer_id), card_number VARCHAR(16) UNIQUE NOT NULL, card_type VARCHAR(20), credit_limit DECIMAL(10,2), outstanding_balance DECIMAL(10,2), expiry_date DATE );
+--MERCHANTS:
+CREATE TABLE merchants ( merchant_id SERIAL PRIMARY KEY, merchant_name VARCHAR(100), category VARCHAR(50), city VARCHAR(50), state VARCHAR(50) );
+TRANSACTIONS:
+--CREATE TABLE transactions ( transaction_id SERIAL PRIMARY KEY, card_id INT REFERENCES credit_cards(card_id), merchant_id INT REFERENCES merchants(merchant_id), transaction_date TIMESTAMP, amount DECIMAL(10,2), status VARCHAR(20), fraud_flag BOOLEAN DEFAULT FALSE );
+
+PAYMENTS:
+CREATE TABLE payments ( payment_id SERIAL PRIMARY KEY, card_id INT REFERENCES credit_cards(card_id), payment_date DATE, payment_amount DECIMAL(10,2) ); 
+INDEX:
+CREATE INDEX idx_txn_card ON transactions(card_id); CREATE INDEX idx_txn_merchant ON transactions(merchant_id); CREATE INDEX idx_txn_date ON transactions(transaction_date);
+
+
 -- INSERT STATEMENTS --
 
 INSERT INTO customers (customer_id, first_name, last_name, email, phone, city, state, created_date) VALUES (1, 'Danielle', 'Johnson', 'danielle.johnson36@gmail.com', '+971-5108603', 'Dubai', 'Dubai', '2024-05-28');
