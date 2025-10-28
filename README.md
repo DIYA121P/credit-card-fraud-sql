@@ -35,4 +35,7 @@ Data is modelled for a mixed-global fintech product .
 - Most trusted card
 
 ## Contact
+
 If you’d like a walkthrough or project files, DM me: linkedin.com/in/diya-prithiani
+
+
