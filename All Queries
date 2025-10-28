@@ -1,0 +1,182 @@
+ALL ANALYTICAL QUERIES:
+
+-- Count total & fraudulent transactions
+SELECT 
+    COUNT(*) AS total_transactions,
+    SUM(CASE WHEN fraud_flag = TRUE THEN 1 ELSE 0 END) AS fraud_transactions
+FROM transactions;
+
+
+--  Fraud percentage = How risky is this portfolio?
+SELECT 
+    ROUND(100.0 * SUM(CASE WHEN fraud_flag=TRUE THEN 1 ELSE 0 END) / COUNT(*), 2) 
+    AS fraud_percentage
+FROM transactions;
+
+
+--Average Transaction Amount Are users spending high or low?
+SELECT ROUND(AVG(amount), 2) AS avg_transaction_amount
+FROM transactions;
+
+--  Customer with maximum total spend
+SELECT c.customer_id, c.first_name, c.last_name,
+       SUM(t.amount) AS total_spent
+FROM customers c
+JOIN credit_cards cc ON c.customer_id = cc.customer_id
+JOIN transactions t ON cc.card_id = t.card_id
+GROUP BY c.customer_id, c.first_name, c.last_name
+ORDER BY total_spent DESC
+LIMIT 1;
+
+--  TOP USED MERCHANTS
+SELECT m.merchant_name, COUNT(*) AS total_visits
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.merchant_name
+ORDER BY total_visits DESC
+LIMIT 5;
+
+
+
+--  CATEGORY WISE SPENDING
+SELECT m.category, ROUND(SUM(t.amount), 2) AS total_spent
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.category
+ORDER BY total_spent DESC;
+
+
+--WHICH CITY HAS MOST FRAUD CASES
+SELECT m.city, COUNT(*) AS fraud_count FROM transactions t JOIN merchants m ON t.merchant_id = m.merchant_id
+WHERE t.fraud_flag = TRUE
+GROUP BY m.city
+ORDER BY fraud_count DESC;
+
+
+--Outstanding > 60% of credit limit
+SELECT c.first_name, c.last_name, cc.credit_limit, cc.outstanding_balance
+FROM credit_cards cc
+JOIN customers c ON cc.customer_id = c.customer_id
+WHERE cc.outstanding_balance > cc.credit_limit * 0.6;
+
+
+-- MOST TRUSTED CARD
+SELECT card_type, COUNT(*) AS total_cards
+FROM credit_cards
+GROUP BY card_type
+ORDER BY total_cards DESC;
+
+
+
+
+
+-- MONTH WISE SPENDING
+SELECT DATE_TRUNC('month', transaction_date) AS month,
+       ROUND(SUM(amount), 2) AS total_spending
+FROM transactions
+GROUP BY month
+ORDER BY month;
+
+
+
+-- How many payments didn’t go through?
+SELECT COUNT(*) AS failed_transactions
+FROM transactions
+WHERE status = 'Failed';
+
+
+-- Top Paying Customer (Repayments)
+
+SELECT c.first_name, c.last_name, 
+       SUM(p.payment_amount) AS total_paid
+FROM payments p
+JOIN credit_cards cc ON p.card_id = cc.card_id
+JOIN customers c ON cc.customer_id = c.customer_id
+GROUP BY c.first_name, c.last_name
+ORDER BY total_paid DESC
+LIMIT 1;
+
+--MOST TRUSTED MERCHANTS WITH NO FRAUD CASES
+SELECT m.merchant_name
+FROM merchants m
+LEFT JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.merchant_id, m.merchant_name
+HAVING SUM(CASE WHEN t.fraud_flag = TRUE THEN 1 ELSE 0 END) = 0;
+
+--TOP 5 DEBTORS
+SELECT c.first_name, c.last_name, 
+       cc.outstanding_balance
+FROM credit_cards cc
+JOIN customers c ON c.customer_id = cc.customer_id
+ORDER BY cc.outstanding_balance DESC
+LIMIT 5;
+
+
+--MOST TARGETED CARD 
+SELECT cc.card_type,
+       COUNT(*) AS fraud_cases
+FROM transactions t
+JOIN credit_cards cc ON t.card_id = cc.card_id
+WHERE t.fraud_flag = TRUE
+GROUP BY cc.card_type
+ORDER BY fraud_cases DESC;
+
+
+
+--higher than avg spendings(fraud chances)
+
+SELECT 
+    t.transaction_id,
+    c.customer_id,
+    ROUND(AVG(t.amount) OVER (PARTITION BY c.customer_id), 2) AS avg_spend,
+    t.amount,
+    CASE 
+        WHEN t.amount > (AVG(t.amount) OVER (PARTITION BY c.customer_id) * 3)
+        THEN 'High-risk'
+        ELSE 'Normal'
+    END AS fraud_score
+FROM transactions t
+JOIN credit_cards cc ON t.card_id = cc.card_id
+JOIN customers c ON cc.customer_id = c.customer_id
+ORDER BY t.amount DESC
+limit 
+
+--  City-wise Credit Risk Score
+SELECT  c.city, COUNT(*) AS total_customers,
+    ROUND(AVG((cc.outstanding_balance / cc.credit_limit) * 100), 2) AS avg_risk_percentage
+FROM customers c
+JOIN credit_cards cc ON c.customer_id = cc.customer_id
+GROUP BY c.city
+HAVING COUNT(*) > 3
+ORDER BY avg_risk_percentage DESC;
+
+
+--Total spend - total repayment = actual profit earned
+
+--  Customer Lifetime Value (LTV)
+SELECT 
+    c.customer_id,
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+    SUM(CASE WHEN t.status = 'Success' THEN t.amount ELSE 0 END) AS total_spent,
+    COALESCE(SUM(p.payment_amount), 0) AS total_paid,
+    ROUND(
+        SUM(CASE WHEN t.status = 'Success' THEN t.amount ELSE 0 END)
+        - COALESCE(SUM(p.payment_amount), 0),
+        2
+    ) AS net_profit_for_bank
+FROM customers c
+JOIN credit_cards cc ON c.customer_id = cc.customer_id
+LEFT JOIN transactions t ON cc.card_id = t.card_id
+LEFT JOIN payments p ON cc.card_id = p.card_id
+GROUP BY c.customer_id, customer_name
+ORDER BY net_profit_for_bank DESC;
+
+ SELECT 
+    ROUND(
+        (SUM(CASE WHEN is_fraud = 1 THEN 1 ELSE 0 END) * 100.0) 
+        / COUNT(*), 
+        2
+    ) AS fraud_rate_percentage
+FROM transactions;
+
+
