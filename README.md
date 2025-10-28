@@ -11,7 +11,8 @@ Data is modelled for a mixed-global fintech product .
 ## Files
 - `creation_insertion— DDL to create schema (PostgreSQL)` — INSERT statements
 - `ANALYTICAL QUERIES — Advanced analysis queries 
-- `ERD.png` — ER diagram (visual schema)
+- `CreditCard_ERD.png` — ER diagram (visual schema)
+- Statistical Conclusions
 - `PNG FILES/` —  result screenshots (proof of work)
 
 ## How to run 
