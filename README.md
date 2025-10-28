@@ -9,11 +9,10 @@ This project analyses credit card transaction data to detect suspicious behaviou
 Data is modelled for a mixed-global fintech product .
 
 ## Files
-- `data/Create_Tables_Postgres.sql` — DDL to create schema (PostgreSQL)
-- `data/Insert_Data_Final.sql` — INSERT statements
-- `queries/Queries_Postgres.sql` — Advanced analysis queries 
-- `docs/ERD.png` — ER diagram (visual schema)
-- `screenshots/` —  result screenshots (proof of work)
+- `creation_insertion— DDL to create schema (PostgreSQL)` — INSERT statements
+- `ANALYTICAL QUERIES — Advanced analysis queries 
+- `ERD.png` — ER diagram (visual schema)
+- `PNG FILES/` —  result screenshots (proof of work)
 
 ## How to run 
 1. Install PostgreSQL & open pgAdmin.
