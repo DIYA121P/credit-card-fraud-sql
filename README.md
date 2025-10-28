@@ -34,6 +34,11 @@ Data is modelled for a mixed-global fintech product .
 - City with highest fraud
 - Most trusted card
 
+##  Business Impact
+This analysis helps credit card companies reduce fraud losses, improve risk controls,
+and increase profitability through better customer insight.
+
+
 ## Contact
 
 If you’d like a walkthrough or project files, DM me: linkedin.com/in/diya-prithiani
