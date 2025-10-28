@@ -1,0 +1,44 @@
+Key Insights from Transaction Data Analysis
+
+ Fraud Risk
+
+Fraud rate across system: ~7–10%
+
+Electronics & Online Retail categories represent highest fraud concentration
+
+Late-night transactions (11 PM – 3 AM) show 2.5x more fraud attempts
+
+9 high-risk customers flagged based on spend > 3× their avg behavior
+
+ Revenue & Spending Trends
+
+Avg monthly spend per active card: $420
+
+India, UAE, and US customers contribute 65% of total spend
+
+Fuel & Grocery merchants have high transaction count but low fraud rate (<1%)
+
+ Credit Risk
+
+14 customers have outstanding > 85% of credit limit
+
+6 cards show no payments in last 60 days → potential default risk
+
+ Merchant Performance
+
+Top 10 merchants account for 55% of total revenue
+
+
+
+ Customer Segmentation Observations
+
+Younger customers (under 30) = higher card usage, lower balances
+
+Older customers (40+) = fewer transactions, higher ticket size
+
+ Actionable Business Recommendations
+-Issue	Recommendation
+-Fraud concentrated in electronics	Strengthen OTP & device tracking during checkout
+-High utilization customers	Credit limit review or soft warning alerts
+-Cards inactive 60+ days	Retention campaign (cashback offers)
+-Late-night fraud attempts	Introduce adaptive transaction approval
